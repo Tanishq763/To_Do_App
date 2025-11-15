@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="project2.css">
+</head>
+<body style="background-color: black;">
+   
+    
+      <div></div>
+    
+    <form>
+        <div id="container">
+  <h1 id="Text">ToDo List</h1>
+  <div id="input">
+    
+    <input type="text" id="Box" placeholder="Enter a task" />
+
+    <button class="btn">AddTo Do</button>
+  </div>
+</div>
+      
+      
+      <section class="todoel"></section>
+     </form>
+   
+    
+<script>
+    const a = document.querySelector(".todoel");
+    const Box = document.getElementById("Box");
+    
+    const getarr = () =>{
+      return JSON.parse(localStorage.getItem("key"));
+    };
+
+    const addtomap = (arr) =>{
+    return localStorage.setItem("key",JSON.stringify(arr));
+    };
+
+    let arr = getarr() || [];
+
+    const Dynamic = (val) =>{
+    const divElement = document.createElement("div");
+      divElement.classList.add("main_to_do");
+      divElement.innerHTML = `
+      
+      <li>${val}</li> <button class="delbtn">Delete</button>`;
+      a.append(divElement);
+    };
+
+    const addTodoList = (e) => {
+      e.preventDefault();
+      
+      const todo = Box.value.trim();
+      Box.value = "";
+      if(!arr.includes(todo) && todo!=""){
+      arr.push(todo);
+      arr = [...new Set(arr)];
+      localStorage.setItem("key",JSON.stringify(arr));
+
+    Dynamic(todo);
+      }
+    };
+    const showarr = () =>{
+    arr.forEach((val) => {
+    Dynamic(val);
+    });
+    };
+        
+    showarr();
+    const removeval = (e) =>{
+    const rem = e.target;
+    let content = rem.previousElementSibling.innerText;
+    let par = rem.parentElement;
+    arr = arr.filter((curtodo) =>{
+    return curtodo != content.toLowerCase();
+    });
+
+    addtomap(arr);
+    par.remove();
+    };
+
+    a.addEventListener("click",(e)=>{
+    e.preventDefault();
+    removeval(e);
+    });
+
+    document.querySelector(".btn").addEventListener("click",(e) =>{
+    addTodoList(e);
+    });
+
+    
+</script>
+
+</body>
+</html>
